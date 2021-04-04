@@ -1,0 +1,22 @@
+<idea-plugin>
+  <id>dev.hashnode.bas.insomnimac</id>
+  <name>Insomnimac</name>
+  <version>1.0</version>
+  <vendor email="basleijdekkers@gmail.com" url="https://twitter.com/InspectorBas">Bas Leijdekkers</vendor>
+
+  <description>
+    Prevents your Mac from sleeping when a long running task is active in the IDE.
+  </description>
+
+  <change-notes>
+    First version.
+  </change-notes>
+
+  <idea-version since-build="202.0"/>
+
+  <depends>com.intellij.modules.platform</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <backgroundPostStartupActivity implementation="dev.hashnode.bas.InsomnimacStartupActivity"/>
+  </extensions>
+</idea-plugin>
