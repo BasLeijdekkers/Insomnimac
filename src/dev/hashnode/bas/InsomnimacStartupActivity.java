@@ -9,6 +9,7 @@ import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,12 +17,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class InsomnimacStartupActivity implements StartupActivity.Background {
 
-    private volatile Runnable command = null;
+    private static volatile Runnable command = null;
 
     /**
      * Register once application wide after first project is opened.
      * @param project  unused
      */
+    @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     @Override
     public synchronized void runActivity(@NotNull Project project) {
         if (command != null) {
@@ -31,8 +33,8 @@ public class InsomnimacStartupActivity implements StartupActivity.Background {
             Logger.getInstance("#insomnimac").warn("Insomnimac does not work on " + SystemInfoRt.OS_NAME);
             command = () -> {}; // dummy
         }
-        AppExecutorUtil.getAppScheduledExecutorService()
-                .scheduleWithFixedDelay(command = new SleepBlocker(), 11, 11, TimeUnit.SECONDS);
+        final ScheduledExecutorService executorService = AppExecutorUtil.getAppScheduledExecutorService();
+        executorService.scheduleWithFixedDelay(command = new SleepBlocker(), 11, 11, TimeUnit.SECONDS);
     }
 
 }
