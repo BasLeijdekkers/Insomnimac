@@ -5,8 +5,6 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.OSProcessUtil;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentLongObjectMap;
@@ -22,6 +20,18 @@ class SleepBlocker implements Runnable {
 
     @Override
     public void run() {
+        try {
+            preventSleep();
+        } catch (RuntimeException e) {
+            LOG.error(e);
+            throw e; // rethrow exception so further execution of this task will be suppressed
+        } catch (Exception e) {
+            LOG.error(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void preventSleep() throws ExecutionException {
         if (progressRunning) {
             final boolean stillRunning = isProgressBarActive();
             if (process != null) {
@@ -42,11 +52,7 @@ class SleepBlocker implements Runnable {
                     LOG.info("long running task detected, starting caffeinate");
                     final GeneralCommandLine commandLine = new GeneralCommandLine("/usr/bin/caffeinate");
                     commandLine.addParameter("-w " + OSProcessUtil.getApplicationPid());
-                    try {
-                        process = commandLine.createProcess();
-                    } catch (ExecutionException e) {
-                        LOG.error(e);
-                    }
+                    process = commandLine.createProcess();
                 }
             }
         } else if (isProgressBarActive()) {
@@ -58,16 +64,9 @@ class SleepBlocker implements Runnable {
      * Dirty hack to detect if a progress bar is currently visible.
      */
     private static boolean isProgressBarActive() {
-        try {
-            final ConcurrentLongObjectMap<?> currentIndicators =
-                    ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
-                                                       "currentIndicators");
-            if (currentIndicators == null) {
-                return false;
-            }
-            return !currentIndicators.isEmpty();
-        } catch (Exception ignore) {
-            return false;
-        }
+        final ConcurrentLongObjectMap<?> currentIndicators =
+                ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
+                                                   "currentIndicators");
+        return currentIndicators != null && !currentIndicators.isEmpty();
     }
 }
