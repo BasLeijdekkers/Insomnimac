@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,8 @@ public class InsomnimacStartupActivity implements StartupActivity.Background {
             command = () -> {}; // dummy
         }
         final ScheduledExecutorService executorService = AppExecutorUtil.getAppScheduledExecutorService();
-        executorService.scheduleWithFixedDelay(command = new SleepBlocker(), 11, 11, TimeUnit.SECONDS);
+        final int delay = Registry.intValue("insomnimac.poll.interval.seconds");
+        executorService.scheduleWithFixedDelay(command = new SleepBlocker(), delay, delay, TimeUnit.SECONDS);
     }
 
 }

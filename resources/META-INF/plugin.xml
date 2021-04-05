@@ -18,5 +18,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <backgroundPostStartupActivity implementation="dev.hashnode.bas.InsomnimacStartupActivity"/>
+    <registryKey key="insomnimac.poll.interval.seconds" defaultValue="59"
+                 description="Specifies how often Insomnimac checks if a long running task is active"/>
   </extensions>
 </idea-plugin>
