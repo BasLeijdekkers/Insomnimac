@@ -1,9 +1,6 @@
 // Copyright 2020-2021 Bas Leijdekkers Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package dev.hashnode.bas;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.OSProcessUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.util.ReflectionUtil;
@@ -12,11 +9,10 @@ import com.intellij.util.containers.ConcurrentLongObjectMap;
 /**
  * @author Bas Leijdekkers
  */
-class SleepBlocker implements Runnable {
-    private static final Logger LOG = Logger.getInstance("#insomnimac");
+abstract class SleepBlocker implements Runnable {
+    protected static final Logger LOG = Logger.getInstance("#insomniac");
 
-    private boolean progressRunning = false;
-    private Process process = null;
+    private boolean shouldPreventSleep = false;
 
     @Override
     public void run() {
@@ -31,42 +27,28 @@ class SleepBlocker implements Runnable {
         }
     }
 
-    private void preventSleep() throws ExecutionException {
-        if (progressRunning) {
-            final boolean stillRunning = isProgressBarActive();
-            if (process != null) {
-                if (!stillRunning) {
-                    LOG.info("task finished, stopping caffeinate");
-                    process.destroy();
-                    try {
-                        process.waitFor();
-                    } catch (InterruptedException ignore) {
-                    }
-                    process = null;
-                    progressRunning = false;
-                }
-            } else {
-                if (!stillRunning) {
-                    progressRunning = false;
-                } else {
-                    LOG.info("long running task detected, starting caffeinate");
-                    final GeneralCommandLine commandLine = new GeneralCommandLine("/usr/bin/caffeinate");
-                    commandLine.addParameter("-w " + OSProcessUtil.getApplicationPid());
-                    process = commandLine.createProcess();
-                }
-            }
-        } else if (isProgressBarActive()) {
-            progressRunning = true;
+    private void preventSleep() {
+        final boolean hasLongRunningTask = isProgressBarActive();
+        if (shouldPreventSleep) {
+            shouldPreventSleep = hasLongRunningTask;
+            handleSleep(shouldPreventSleep);
+        } else if (hasLongRunningTask) {
+            shouldPreventSleep = true;
         }
     }
+
+    public abstract void handleSleep(boolean keepAwake);
 
     /**
      * Dirty hack to detect if a progress bar is currently visible.
      */
     private static boolean isProgressBarActive() {
-        final ConcurrentLongObjectMap<?> currentIndicators =
+        final ConcurrentLongObjectMap<?> threadsUnderIndicator =
                 ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
-                                                   "currentIndicators");
-        return currentIndicators != null && !currentIndicators.isEmpty();
+                                                   "threadsUnderIndicator");
+        if (threadsUnderIndicator == null) {
+            LOG.warn("Can't detect long running tasks, sleep will not be prevented");
+        }
+        return threadsUnderIndicator != null && !threadsUnderIndicator.isEmpty();
     }
 }

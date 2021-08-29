@@ -1,11 +1,11 @@
 <idea-plugin>
-  <id>dev.hashnode.bas.insomnimac</id>
-  <name>Insomnimac</name>
+  <id>dev.hashnode.bas.insomniac</id>
+  <name>Insomniac</name>
   <version>1.0</version>
   <vendor email="basleijdekkers@gmail.com" url="https://twitter.com/InspectorBas">Bas Leijdekkers</vendor>
 
   <description>
-    Prevents your Mac from sleeping when a long running task is active in the IDE.
+    Prevents your system from sleeping when a long running task is active in the IDE.
   </description>
 
   <change-notes>
@@ -17,8 +17,12 @@
   <depends>com.intellij.modules.platform</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <backgroundPostStartupActivity implementation="dev.hashnode.bas.InsomnimacStartupActivity"/>
-    <registryKey key="insomnimac.poll.interval.seconds" defaultValue="59"
-                 description="Specifies how often Insomnimac checks if a long running task is active"/>
+    <backgroundPostStartupActivity implementation="dev.hashnode.bas.InsomniacStartupActivity"/>
+    <registryKey key="insomniac.poll.interval.seconds" defaultValue="59"
+                 description="Specifies the time in seconds between Insomniac checks if a long running task is active"
+                 restartRequired="true"/>
+    <registryKey key="insomniac.force.generic.sleep.blocker" defaultValue="false"
+                 description="Forces Insomniac to always use the generic sleep blocker which uses a small mouse movement to prevent sleep"
+                 restartRequired="true"/>
   </extensions>
 </idea-plugin>

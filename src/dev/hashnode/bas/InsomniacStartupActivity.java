@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Bas Leijdekkers
  */
-public class InsomnimacStartupActivity implements StartupActivity.Background {
+public class InsomniacStartupActivity implements StartupActivity.Background {
 
-    private static volatile Runnable command = null;
+    private static volatile boolean initialized = false;
 
     /**
      * Register once application wide after first project is opened.
@@ -27,16 +27,24 @@ public class InsomnimacStartupActivity implements StartupActivity.Background {
     @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     @Override
     public synchronized void runActivity(@NotNull Project project) {
-        if (command != null) {
+        if (initialized) {
             return;
         }
-        if (!SystemInfo.isMac) {
-            Logger.getInstance("#insomnimac").warn("Insomnimac does not work on " + SystemInfoRt.OS_NAME);
-            command = () -> {}; // dummy
+        initialized = true;
+        final boolean useGenericSleepBlocker = Registry.is("insomniac.force.generic.sleep.blocker");
+        final SleepBlocker sleepBlocker;
+        if (SystemInfo.isMac && !useGenericSleepBlocker) {
+            sleepBlocker = new MacSleepBlocker();
+        }
+        else if (SystemInfo.isWindows && !useGenericSleepBlocker) {
+            sleepBlocker = new WindowsSleepBlocker();
+        }
+        else {
+            Logger.getInstance("#insomniac").warn("Using generic sleep blocker for " + SystemInfoRt.OS_NAME);
+            sleepBlocker = new GenericSleepBlocker();
         }
         final ScheduledExecutorService executorService = AppExecutorUtil.getAppScheduledExecutorService();
-        final int delay = Registry.intValue("insomnimac.poll.interval.seconds");
-        executorService.scheduleWithFixedDelay(command = new SleepBlocker(), delay, delay, TimeUnit.SECONDS);
+        final int delay = Registry.intValue("insomniac.poll.interval.seconds");
+        executorService.scheduleWithFixedDelay(sleepBlocker, delay, delay, TimeUnit.SECONDS);
     }
-
 }
