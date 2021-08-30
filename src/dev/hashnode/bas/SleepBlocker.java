@@ -43,12 +43,17 @@ abstract class SleepBlocker implements Runnable {
      * Dirty hack to detect if a progress bar is currently visible.
      */
     private static boolean isProgressBarActive() {
-        final ConcurrentLongObjectMap<?> threadsUnderIndicator =
-                ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
-                                                   "threadsUnderIndicator");
-        if (threadsUnderIndicator == null) {
-            LOG.warn("Can't detect long running tasks, sleep will not be prevented");
+        try {
+            final ConcurrentLongObjectMap<?> currentIndicators =
+                    ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
+                                                       "currentIndicators");
+            if (currentIndicators == null) {
+                throw new IllegalStateException();
+            }
+            return !currentIndicators.isEmpty();
+        } catch (RuntimeException e) {
+            LOG.warn("Can't detect long running tasks, sleep will not be prevented", e);
+            return false;
         }
-        return threadsUnderIndicator != null && !threadsUnderIndicator.isEmpty();
     }
 }
