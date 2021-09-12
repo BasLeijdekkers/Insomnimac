@@ -17,7 +17,9 @@ import com.intellij.util.containers.ConcurrentLongObjectMap;
 abstract class SleepBlocker implements Runnable {
     protected static final Logger LOG = Logger.getInstance("#insomniac");
 
-    private boolean shouldPreventSleep = false;
+    private static final int threshold = 3;
+
+    private int longRunningTaskDetected = 0;
     private Notification notification;
 
     @Override
@@ -35,12 +37,15 @@ abstract class SleepBlocker implements Runnable {
 
     private void preventSleep() {
         final boolean hasLongRunningTask = isProgressBarActive();
-        if (shouldPreventSleep) {
-            shouldPreventSleep = hasLongRunningTask;
-            showHideNotification(shouldPreventSleep);
-            handleSleep(shouldPreventSleep);
-        } else if (hasLongRunningTask) {
-            shouldPreventSleep = true;
+        if (hasLongRunningTask && longRunningTaskDetected < threshold) {
+            longRunningTaskDetected++;
+        }
+        if (longRunningTaskDetected >= threshold) {
+            if (!hasLongRunningTask) {
+                longRunningTaskDetected = 0;
+            }
+            showHideNotification(longRunningTaskDetected != 0);
+            handleSleep(longRunningTaskDetected != 0);
         }
     }
 
@@ -70,7 +75,7 @@ abstract class SleepBlocker implements Runnable {
      */
     private static boolean isProgressBarActive() {
         try {
-            final ConcurrentLongObjectMap<?> currentIndicators =
+            final ConcurrentLongObjectMap<ProgressIndicator> currentIndicators =
                     ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
                                                        "currentIndicators");
             if (currentIndicators == null) {

@@ -19,7 +19,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <backgroundPostStartupActivity implementation="dev.hashnode.bas.InsomniacStartupActivity"/>
     <notificationGroup id="Insomniac" displayType="STICKY_BALLOON" key="Insomniac" />
-    <registryKey key="insomniac.poll.interval.seconds" defaultValue="59"
+    <registryKey key="insomniac.poll.interval.seconds" defaultValue="29"
                  description="Specifies the time in seconds between Insomniac checks if a long running task is active"
                  restartRequired="true"/>
     <registryKey key="insomniac.force.generic.sleep.blocker" defaultValue="false"
