@@ -3,8 +3,6 @@ package dev.hashnode.bas;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.OSProcessUtil;
-import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * @author Bas Leijdekkers
@@ -19,7 +17,6 @@ class MacSleepBlocker extends SleepBlocker {
             if (process == null) {
                 LOG.info("Starting Caffeinate");
                 final GeneralCommandLine commandLine = new GeneralCommandLine("/usr/bin/caffeinate");
-                commandLine.addParameter("-w " + OSProcessUtil.getApplicationPid());
                 try {
                     process = commandLine.createProcess();
                 } catch (ExecutionException e) {
