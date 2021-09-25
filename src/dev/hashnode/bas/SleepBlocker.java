@@ -5,11 +5,8 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.ConcurrentLongObjectMap;
 
 /**
  * @author Bas Leijdekkers
@@ -36,7 +33,7 @@ abstract class SleepBlocker implements Runnable {
     }
 
     private void preventSleep() {
-        final boolean hasLongRunningTask = isProgressBarActive();
+        final boolean hasLongRunningTask = ProgressManager.getInstance().hasUnsafeProgressIndicator();
         if (hasLongRunningTask && longRunningTaskDetected < threshold) {
             longRunningTaskDetected++;
         }
@@ -69,22 +66,4 @@ abstract class SleepBlocker implements Runnable {
     }
 
     public abstract void handleSleep(boolean keepAwake);
-
-    /**
-     * Dirty hack to detect if a progress bar is currently visible.
-     */
-    private static boolean isProgressBarActive() {
-        try {
-            final ConcurrentLongObjectMap<ProgressIndicator> currentIndicators =
-                    ReflectionUtil.getStaticFieldValue(CoreProgressManager.class, ConcurrentLongObjectMap.class,
-                                                       "currentIndicators");
-            if (currentIndicators == null) {
-                throw new IllegalStateException();
-            }
-            return !currentIndicators.isEmpty();
-        } catch (RuntimeException e) {
-            LOG.warn("Can't detect long running tasks, sleep will not be prevented", e);
-            return false;
-        }
-    }
 }
