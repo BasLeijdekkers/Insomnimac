@@ -8,6 +8,8 @@ import java.awt.*;
  */
 class GenericSleepBlocker extends SleepBlocker {
 
+    private boolean left = true;
+
     @Override
     public void handleSleep(boolean keepAwake) {
         if (keepAwake) {
@@ -16,9 +18,15 @@ class GenericSleepBlocker extends SleepBlocker {
                 final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
                 final Robot robot = new Robot(pointerInfo.getDevice());
                 final Point location = pointerInfo.getLocation();
-                final int delta = (location.x == 0) ? -1 : 1;
+                final int delta;
+                if (location.x == 0) {
+                    delta = 1;
+                }
+                else {
+                    delta = left ? -1 : 1;
+                    left = !left;
+                }
                 robot.mouseMove(location.x + delta, location.y);
-                robot.mouseMove(location.x - delta, location.y);
             } catch (AWTException e) {
                 throw new RuntimeException(e);
             }
