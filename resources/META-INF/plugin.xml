@@ -5,9 +5,19 @@
   <vendor email="basleijdekkers@gmail.com" url="https://twitter.com/InspectorBas">Bas Leijdekkers</vendor>
 
   <description>
-    Prevents your system from sleeping when a long running task is active in the IDE.
-  </description>
+    <![CDATA[
+    <p>Prevents your system from sleeping while a long-running task is active in the IDE.
 
+    <p>Too often I have started a full rebuild or an inspection run, went for coffee, and twenty minutes later when
+      I came back: my laptop has gone into sleep mode and the task is only half finished. To prevent this from
+      happening, I built this plugin. It detects tasks that are active for more than one-and-a-half minutes, and when
+      it has found one, keeps the system awake. Zero user interface, just set it and forget it.
+
+    <p>To prevent sleep, on the Mac the built-in-the-OS tool caffeinate is used. On Windows the OS
+      <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate">SetThreadExecutionState function</a>
+      is called. And on Linux the mouse is wiggled by one pixel (if you know of a better way, let me know or
+      send a pull request).
+    ]]></description>
   <change-notes>
     First version.
   </change-notes>
