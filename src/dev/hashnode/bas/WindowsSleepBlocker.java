@@ -18,7 +18,7 @@ class WindowsSleepBlocker extends SleepBlocker {
         }
         if (keepAwake) {
             LOG.info("Resetting idle timer to prevent sleep");
-            // see https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate?redirectedfrom=MSDN
+            // see https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate
             Kernel32.INSTANCE.SetThreadExecutionState(WinBase.ES_SYSTEM_REQUIRED);
         }
     }
