@@ -1,4 +1,7 @@
-Prevents your system from sleeping while a long-running task is active in the IDE.
+#Insomniac
+
+An IntelliJ IDEA plugin that prevents your system from sleeping while a 
+long-running task is active in your IntelliJ Platform IDE.
 
 Too often I have started a full rebuild or an inspection run, went for coffee, and twenty minutes later when
 I came back: my laptop has gone into sleep mode and the task is only half finished. To prevent this from
