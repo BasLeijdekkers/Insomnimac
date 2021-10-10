@@ -1,4 +1,4 @@
-#Insomniac
+# Insomniac
 
 An IntelliJ IDEA plugin that prevents your system from sleeping while a 
 long-running task is active in your IntelliJ Platform IDE.
