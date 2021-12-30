@@ -1,0 +1,23 @@
+<!--
+  - Copyright 2021 Bas Leijdekkers Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" version="1.1">
+    <defs>
+        <g id="eye">
+            <line y2="-12" stroke="#000000"/>
+            <line y2="-12" stroke="#000000" transform="rotate(15)"/>
+            <line y2="-12" stroke="#000000" transform="rotate(30)"/>
+            <line y2="-12" stroke="#000000" transform="rotate(45)"/>
+            <line y2="-12" stroke="#000000" transform="rotate(-15)"/>
+            <line y2="-12" stroke="#000000" transform="rotate(-30)"/>
+            <line y2="-12" stroke="#000000" transform="rotate(-45)"/>
+            <circle r="9" fill="#000000"/>
+            <circle r="8" fill="#ffffff"/>
+            <circle r="5" fill="#389FD6"/>
+            <circle r="3" fill="#000000"/>
+        </g>
+    </defs>
+    <use xlink:href="#eye" x="10.5" y="18"/>
+    <use xlink:href="#eye" x="29.5" y="18"/>
+    <text x="20" y="34" font-size="8" text-anchor="middle" fill="black">Insomniac</text>
+</svg>
