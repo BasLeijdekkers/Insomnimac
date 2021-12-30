@@ -11,25 +11,23 @@ class GenericSleepBlocker extends SleepBlocker {
     private boolean left = true;
 
     @Override
-    public void handleSleep(boolean keepAwake) {
-        if (keepAwake) {
-            LOG.info("Wiggling mouse to prevent sleep");
-            try {
-                final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-                final Robot robot = new Robot(pointerInfo.getDevice());
-                final Point location = pointerInfo.getLocation();
-                final int delta;
-                if (location.x == 0) {
-                    delta = 1;
-                }
-                else {
-                    delta = left ? -1 : 1;
-                    left = !left;
-                }
-                robot.mouseMove(location.x + delta, location.y);
-            } catch (AWTException e) {
-                throw new RuntimeException(e);
+    public void preventSleep() {
+        LOG.info("Wiggling mouse to prevent sleep");
+        try {
+            final PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+            final Robot robot = new Robot(pointerInfo.getDevice());
+            final Point location = pointerInfo.getLocation();
+            final int delta;
+            if (location.x == 0) {
+                delta = 1;
             }
+            else {
+                delta = left ? -1 : 1;
+                left = !left;
+            }
+            robot.mouseMove(location.x + delta, location.y);
+        } catch (AWTException e) {
+            throw new RuntimeException(e);
         }
     }
 }

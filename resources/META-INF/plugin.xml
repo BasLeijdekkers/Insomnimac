@@ -27,14 +27,12 @@
   <depends>com.intellij.modules.platform</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <backgroundPostStartupActivity implementation="dev.hashnode.bas.InsomniacStartupActivity"/>
+    <backgroundPostStartupActivity implementation="dev.hashnode.bas.Insomniac"/>
     <notificationGroup id="Insomniac" displayType="STICKY_BALLOON" key="Insomniac" />
     <registryKey key="insomniac.poll.interval.seconds" defaultValue="29"
-                 description="Specifies the time in seconds between Insomniac checks if a long running task is active"
-                 restartRequired="true"/>
+                 description="Specifies the time in seconds between Insomniac checks if a long running task is active"/>
     <registryKey key="insomniac.force.generic.sleep.blocker" defaultValue="false"
-                 description="Forces Insomniac to always use the generic sleep blocker which uses a small mouse movement to prevent sleep"
-                 restartRequired="true"/>
+                 description="Forces Insomniac to always use the generic sleep blocker which uses a small mouse movement to prevent sleep"/>
     <registryKey key="insomniac.show.notification" defaultValue="false"
                  description="Show a notification when Insomniac is preventing sleep. The notication will disappear automatically when sleep is no longer prevented."/>
   </extensions>

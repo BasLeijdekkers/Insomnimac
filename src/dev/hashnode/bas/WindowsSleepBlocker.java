@@ -11,15 +11,12 @@ import com.sun.jna.platform.win32.WinBase;
 class WindowsSleepBlocker extends SleepBlocker {
 
     @Override
-    public void handleSleep(boolean keepAwake) {
+    public void preventSleep() {
         if (!JnaLoader.isLoaded()) {
-            LOG.warn("JNA not loaded, can't prevent sleep");
-            return;
+            throw new IllegalStateException("JNA not loaded, can't prevent sleep");
         }
-        if (keepAwake) {
-            LOG.info("Resetting idle timer to prevent sleep");
-            // see https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate
-            Kernel32.INSTANCE.SetThreadExecutionState(WinBase.ES_SYSTEM_REQUIRED);
-        }
+        LOG.info("Resetting idle timer to prevent sleep");
+        // see https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate
+        Kernel32.INSTANCE.SetThreadExecutionState(WinBase.ES_SYSTEM_REQUIRED);
     }
 }
