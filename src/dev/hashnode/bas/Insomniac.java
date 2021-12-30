@@ -68,13 +68,15 @@ public class Insomniac implements StartupActivity.Background {
             };
             final DisposableService disposable = DisposableService.getInstance();
             Registry.get("insomniac.force.generic.sleep.blocker").addListener(listener, disposable);
+            Registry.get("insomniac.mac.native.sleep.blocker").addListener(listener, disposable);
             Disposer.register(DisposableService.getInstance(), this);
         }
 
         private void initializeSleepBlocker() {
             final boolean useGenericSleepBlocker = Registry.is("insomniac.force.generic.sleep.blocker");
             if (SystemInfo.isMac && !useGenericSleepBlocker) {
-                sleepBlocker = new MacCaffeinateSleepBlocker();
+                final boolean useMacNativeSleepBlocker = Registry.is("insomniac.mac.native.sleep.blocker");
+                sleepBlocker = useMacNativeSleepBlocker ? new MacNativeSleepBlocker() : new MacCaffeinateSleepBlocker();
             }
             else if (SystemInfo.isWindows && !useGenericSleepBlocker) {
                 sleepBlocker = new WindowsSleepBlocker();

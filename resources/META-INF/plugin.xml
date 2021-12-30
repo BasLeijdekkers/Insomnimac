@@ -33,6 +33,8 @@
                  description="Specifies the time in seconds between Insomniac checks if a long running task is active"/>
     <registryKey key="insomniac.force.generic.sleep.blocker" defaultValue="false"
                  description="Forces Insomniac to always use the generic sleep blocker which uses a small mouse movement to prevent sleep"/>
+    <registryKey defaultValue="true" key="insomniac.mac.native.sleep.blocker"
+                 description="Use a MacOS native system call to prevent system sleep"/>
     <registryKey key="insomniac.show.notification" defaultValue="false"
                  description="Show a notification when Insomniac is preventing sleep. The notication will disappear automatically when sleep is no longer prevented."/>
   </extensions>
