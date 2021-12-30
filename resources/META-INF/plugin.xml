@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>dev.hashnode.bas.insomniac</id>
   <name>Insomniac</name>
-  <version>1.0</version>
+  <version>2.0</version>
   <vendor email="basleijdekkers@gmail.com" url="https://twitter.com/InspectorBas">Bas Leijdekkers</vendor>
 
   <description>
@@ -13,13 +13,18 @@
       happening, I built this plugin. It detects tasks that are active for more than one-and-a-half minutes, and when
       it has found one, keeps the system awake. Zero user interface, just set it and forget it.
 
-    <p>To prevent sleep, on the Mac the built-in-the-OS tool caffeinate is used. On Windows the OS
+    <p>On the Mac
+      <a href="https://developer.apple.com/documentation/foundation/nsprocessinfo/1415995-beginactivitywithoptions">NSProcessInfo</a>
+      is used to prevent sleep. On Windows the OS
       <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate">SetThreadExecutionState function</a>
       is called. And on Linux the mouse is wiggled by one pixel (if you know of a better way, let me know or
       send a pull request).
     ]]></description>
   <change-notes>
+    <![CDATA[
+    2.0 - Internal redesign. Added a plugin icon. Added native sleep prevention for the Mac.<br>
     1.0 - First release.
+    ]]>
   </change-notes>
 
   <idea-version since-build="211.6693.111"/>
