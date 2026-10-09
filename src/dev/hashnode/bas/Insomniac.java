@@ -7,8 +7,9 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
@@ -16,6 +17,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.openapi.util.registry.RegistryValueListener;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Bas Leijdekkers
  */
-public class Insomniac implements StartupActivity.Background {
+public class Insomniac implements ProjectActivity, DumbAware {
 
     static final Logger LOG = Logger.getInstance("#insomniac");
     private static volatile boolean initialized = false;
@@ -32,15 +35,16 @@ public class Insomniac implements StartupActivity.Background {
     /**
      * Register once application wide after first project is opened.
      * @param project  unused
+     * @param continuation  unused, this activity never suspends
      */
     @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
     @Override
-    public synchronized void runActivity(@NotNull Project project) {
-        if (initialized) {
-            return;
+    public synchronized Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
+        if (!initialized) {
+            initialized = true;
+            schedule(new TaskChecker());
         }
-        initialized = true;
-        schedule(new TaskChecker());
+        return Unit.INSTANCE;
     }
 
     private static void schedule(Runnable task) {

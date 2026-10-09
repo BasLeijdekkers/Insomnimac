@@ -2617,12 +2617,22 @@
       </item>
     </group>
   </component>
+  <component name="libraryTable">
+    <library name="jna-plugin">
+      <CLASSES>
+        <root url="jar://$APPLICATION_HOME_DIR$/plugins/jna-plugin/lib/jna-plugin.jar!/" />
+        <root url="jar://$APPLICATION_HOME_DIR$/plugins/jna-plugin/lib/modules/intellij.libraries.jna.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Insomniac.iml" filepath="$PROJECT_DIR$/Insomniac.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="IntelliJ IDEA 2021.1" project-jdk-type="IDEA JDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="IntelliJ IDEA IU-271.SNAPSHOT" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">

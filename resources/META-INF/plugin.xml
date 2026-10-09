@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>dev.hashnode.bas.insomniac</id>
   <name>Insomniac</name>
-  <version>2.0</version>
+  <version>2.1</version>
   <vendor email="basleijdekkers@gmail.com" url="https://twitter.com/InspectorBas">Bas Leijdekkers</vendor>
 
   <description>
@@ -22,17 +22,20 @@
     ]]></description>
   <change-notes>
     <![CDATA[
+    2.1 - Compatibility with IntelliJ IDEA 2027.1: fixed NoSuchMethodError in the native Mac sleep blocker. Requires 2023.1 or later.<br>
     2.0 - Internal redesign. Added a plugin icon. Added native sleep prevention for the Mac.<br>
     1.0 - First release.
     ]]>
   </change-notes>
 
-  <idea-version since-build="211.6693.111"/>
+  <idea-version since-build="231"/>
 
   <depends>com.intellij.modules.platform</depends>
+  <!-- JNA (used by the Windows sleep blocker) moved from the platform core into a separate bundled plugin in 2027.1 -->
+  <depends optional="true" config-file="insomniac-jna.xml">com.intellij.modules.jna</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <backgroundPostStartupActivity implementation="dev.hashnode.bas.Insomniac"/>
+    <postStartupActivity implementation="dev.hashnode.bas.Insomniac"/>
     <notificationGroup id="Insomniac" displayType="STICKY_BALLOON" key="Insomniac" />
     <registryKey key="insomniac.poll.interval.seconds" defaultValue="29"
                  description="Specifies the time in seconds between Insomniac checks if a long running task is active"/>

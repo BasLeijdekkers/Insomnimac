@@ -3,7 +3,6 @@ package dev.hashnode.bas;
 
 import com.intellij.ui.mac.foundation.Foundation;
 import com.intellij.ui.mac.foundation.ID;
-import com.sun.jna.Pointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,11 +60,14 @@ class MacNativeSleepBlocker extends SleepBlocker {
         public static final long LATENCY_CRITICAL = 0xFF00000000L;
 
         private static final ID NS_PROCESS_INFO = Foundation.getObjcClass("NSProcessInfo");
-        private static final Pointer PROCESS_INFO = Foundation.createSelector("processInfo");
-        private static final Pointer BEGIN_ACTIVITY = Foundation.createSelector("beginActivityWithOptions:reason:");
-        private static final Pointer END_ACTIVITY = Foundation.createSelector("endActivity:");
-        private static final Pointer RETAIN = Foundation.createSelector("retain");
-        private static final Pointer RELEASE = Foundation.createSelector("release");
+
+        // Selectors are passed as strings: Foundation.createSelector() returned a JNA Pointer in older
+        // builds and a Selector since 2027.1, so the String overloads are the only binary compatible API.
+        private static final String PROCESS_INFO = "processInfo";
+        private static final String BEGIN_ACTIVITY = "beginActivityWithOptions:reason:";
+        private static final String END_ACTIVITY = "endActivity:";
+        private static final String RETAIN = "retain";
+        private static final String RELEASE = "release";
 
         MacActivity(@NotNull Object reason) {
             this(reason, USER_INITIATED);
