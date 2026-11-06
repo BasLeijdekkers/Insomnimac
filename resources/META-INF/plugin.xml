@@ -25,7 +25,7 @@
     ]]></description>
   <change-notes>
     <![CDATA[
-    2.1 - Fixed compatibility with future IntelliJ IDEA versions.<br>
+    2.1 - Fixed compatibility with IntelliJ IDEA 2026.3.<br>
     2.0 - Internal redesign. Added a plugin icon. Added native sleep prevention for the Mac.<br>
     1.0 - First release.
     ]]>
