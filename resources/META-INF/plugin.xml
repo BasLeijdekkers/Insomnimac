@@ -8,27 +8,30 @@
     <![CDATA[
     <p>Prevents your system from sleeping while a long-running task is active in the IDE.
 
-    <p>Too often I have started a full rebuild or an inspection run, went for coffee, and twenty minutes later when
+    <p>Too often I have started a full rebuild of a big project or an inspection run, went for coffee, and twenty minutes later when
       I came back: my laptop has gone into sleep mode and the task is only half finished. To prevent this from
-      happening, I built this plugin. It detects tasks that are active for more than one-and-a-half minutes, and when
-      it has found one, keeps the system awake. Zero user interface, just set it and forget it.
+      happening, I built this plugin. 
+      It keeps the system awake when it detects a task that has been active for more than one-and-a-half minute. 
+      Zero user interface, just set it and forget it.
 
     <p>On the Mac
       <a href="https://developer.apple.com/documentation/foundation/nsprocessinfo/1415995-beginactivitywithoptions">NSProcessInfo</a>
-      is used to prevent sleep. On Windows the OS
+      is used to prevent sleep. It is also possible to fall back to the built-into-the-OS tool Caffeinate,
+      by unsettings the registry key `insomniac.mac.native.sleep.blocker` checkbox.
+      On Windows the OS
       <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate">SetThreadExecutionState function</a>
       is called. And on Linux the mouse is wiggled by one pixel (if you know of a better way, let me know or
       send a pull request).
     ]]></description>
   <change-notes>
     <![CDATA[
-    2.1 - Compatibility with IntelliJ IDEA 2027.1: fixed NoSuchMethodError in the native Mac sleep blocker. Requires 2023.1 or later.<br>
+    2.1 - Fixed compatibility with future IntelliJ IDEA versions.<br>
     2.0 - Internal redesign. Added a plugin icon. Added native sleep prevention for the Mac.<br>
     1.0 - First release.
     ]]>
   </change-notes>
 
-  <idea-version since-build="231"/>
+  <idea-version since-build="263"/>
 
   <depends>com.intellij.modules.platform</depends>
   <!-- JNA (used by the Windows sleep blocker) moved from the platform core into a separate bundled plugin in 2027.1 -->
