@@ -1,4 +1,4 @@
-// Copyright 2020-2021 Bas Leijdekkers Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2020-2026 Bas Leijdekkers Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package dev.hashnode.bas;
 
 import com.intellij.notification.Notification;
